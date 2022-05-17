@@ -1,57 +1,74 @@
 import pygame
+import pytmx
 from pytmx.util_pygame import load_pygame
 from player import *
 
+'''
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, x, y, image):
         super().__init__()
- 
-        self.image = pygame.image.load('char_walk_left.gif') 
+        self.image = image
         self.rect = self.image.get_rect()
- 
-    def moveRight(self, pixels):
-        self.rect.x += pixels
- 
-    def moveLeft(self, pixels):
-        self.rect.x -= pixels
- 
-    def moveForward(self, speed):
-        self.rect.y += speed * speed/10
- 
-    def moveBack(self, speed):
-        self.rect.y -= speed * speed/10
+        self.rect.x = x
+        self.rect.y = y
+        
+    def moveRight(self):
+        self.rect.x += 10
+    def moveLeft(self):
+        self.rect.x -= 10
+    def moveUp(self):
+        self.rect.y -= 10
+    def moveDown(self):
+        self.rect.y += 10
+'''
 
 pygame.init()
 clock = pygame.time.Clock()
 
-WIDTH, HEIGHT = 320, 240
+WIDTH, HEIGHT = 800,600
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("FARMING")
-tmx_data = load_pygame('final_project_map.tmx')
-player = pygame.image.load('char_walk_left.gif')
-rect = player.get_rect()
+pygame.display.set_caption("cute kawaii farming simulator for asmr kindness and love")
+bg = pygame.image.load("bg.png")
+SCREEN.blit(bg, (0, 0))
+
+
+
+def growPlant():
+    pass
+
+
 
 def main():
     run = True
-    for layer in tmx_data.visible_layers:
-        for x, y, gid in layer:
-            tile = tmx_data.get_tile_image_by_gid(gid)
-            if tile != None:
-                SCREEN.blit(tile, (x * tmx_data.tilewidth, y * tmx_data.tileheight))
-    pygame.display.update()
-    #i like men - dshi
+    player = pygame.image.load("char_walk_left.gif")
+    player_x = 0
+    player_y = 0
 
     while run: 
-        SCREEN.blit(player, (5,5))
+         #this obj goes here and it swaps
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            
-                
-    clock.tick(60)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    player_x += -10
+                if event.key == pygame.K_RIGHT:
+                    player_x += 10
+                if event.key == pygame.K_UP:
+                    player_y += -10
+                if event.key == pygame.K_DOWN:
+                    player_y += 10
+                if event.key == pygame.K_f:
+                    growPlant()
         
+
+        SCREEN.blit(bg, (0,0))
+        SCREEN.blit(player, (player_x, player_y))
+
+        pygame.display.update()            
+        clock.tick(15)
+    
+    pygame.quit()
 
 if __name__ == "__main__":
     main()
-
-
