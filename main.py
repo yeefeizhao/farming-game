@@ -1,26 +1,5 @@
 import pygame
-import pytmx
-from pytmx.util_pygame import load_pygame
-from player import *
-
-'''
-class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, image):
-        super().__init__()
-        self.image = image
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        
-    def moveRight(self):
-        self.rect.x += 10
-    def moveLeft(self):
-        self.rect.x -= 10
-    def moveUp(self):
-        self.rect.y -= 10
-    def moveDown(self):
-        self.rect.y += 10
-'''
+from datetime import datetime
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -33,40 +12,62 @@ SCREEN.blit(bg, (0, 0))
 
 
 
-def growPlant():
-    pass
+def growPlant(num):
 
-
+    return pygame.image.load("seed1\seed1-" + str(num) + ".png").convert_alpha()
 
 def main():
     run = True
-    player = pygame.image.load("char_walk_left.gif")
-    player_x = 0
-    player_y = 0
+    player = pygame.image.load("char_walk_left.gif").convert_alpha()
+    player_rect = player.get_rect(center = (400, 300))
 
+    plant_left = pygame.image.load("seed1\seed1-1.png").convert_alpha()
+    plant_right = pygame.image.load("seed1\seed1-1.png").convert_alpha()
+
+    left_farm = pygame.Rect(40, 400, 160, 160)
+    right_farm = pygame.Rect(240, 400, 160, 160)
+
+    plant_left_counter = 1;
+    plant_right_counter = 1;
     while run: 
          #this obj goes here and it swaps
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    player_x += -10
-                if event.key == pygame.K_RIGHT:
-                    player_x += 10
-                if event.key == pygame.K_UP:
-                    player_y += -10
-                if event.key == pygame.K_DOWN:
-                    player_y += 10
-                if event.key == pygame.K_f:
-                    growPlant()
-        
 
+            keys = pygame.key.get_pressed()
+            
+
+            if keys[pygame.K_a]:
+                player_rect.left -= 5
+            if keys[pygame.K_w]:
+                player_rect.top -= 5
+            if keys[pygame.K_s]:
+                player_rect.top += 5
+            if keys[pygame.K_d]:
+                player_rect.left += 5
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_f:
+                    plant_left = growPlant(plant_left_counter)
+                    if plant_left_counter < 6:
+                        plant_left_counter += 1
+                    else:
+                        plant_left_counter = 7
+                if event.key == pygame.K_o:
+                    plant_right = growPlant(plant_right_counter)
+                    if plant_right_counter < 6:
+                        plant_right_counter += 1
+                    else:
+                        plant_right_counter = 7
+            
         SCREEN.blit(bg, (0,0))
-        SCREEN.blit(player, (player_x, player_y))
+        SCREEN.blit(plant_left, left_farm)
+        SCREEN.blit(plant_right, right_farm)
+        SCREEN.blit(player, player_rect)
 
         pygame.display.update()            
-        clock.tick(15)
+        clock.tick(60)
     
     pygame.quit()
 
